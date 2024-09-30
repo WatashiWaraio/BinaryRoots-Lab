@@ -12,9 +12,9 @@ Binary trees can be used in many applications, including:
 
 - Compression Algorithms
 - Hierarchical Data Representation
--Artificial Intelligence
--Database Indexing
--Networking Protocols
+- Artificial Intelligence
+- Database Indexing
+- Networking Protocols
 
 ## Features of Our App: 🌟
 
