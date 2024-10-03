@@ -1,4 +1,4 @@
-/*
+//*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -169,6 +169,37 @@ private void addComponents() {
                 controlador.addNode(inputValue); 
                 treePanel.setTree(controlador.getRoot());
                treePanel.repaint(); 
+            }
+        });
+       
+       deleteNodeButton.addActionListener(e -> {
+            String inputValue = deleteInputField.getText().trim(); 
+            deleteInputField.setText("");
+            if (inputValue.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un valor.");
+                return;
+            }
+            if (isNumberTree) {
+                if (!inputValue.matches("-?\\d+")) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese únicamente números.");
+                    return;
+                }
+                try {
+                    int nodeValue = Integer.parseInt(inputValue);
+                    controlador.removeNode(nodeValue); 
+                    treePanel.setTree(controlador.getRoot()); 
+                    treePanel.repaint(); 
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
+                }
+            } else {
+                if (!inputValue.matches("[a-zA-Z]+")) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese únicamente letras.");
+                    return;
+                }
+                    controlador.removeNode(inputValue); 
+                    treePanel.setTree(controlador.getRoot()); 
+                    treePanel.repaint();  
             }
         });
     }
