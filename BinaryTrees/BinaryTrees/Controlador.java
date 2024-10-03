@@ -46,8 +46,43 @@ public class Controlador {
         return root; 
     }
 
-    public void deleteNode(){
-        
+    public void removeNode(Comparable content) {
+    root = removeRecursive(root, content);
+}
+
+    private Modelo removeRecursive(Modelo current, Comparable content) {
+        if (current == null) {
+            return null;
+        }
+        int comparison = content.compareTo(current.getContent());
+        if (comparison < 0) {
+            current.setizq(removeRecursive(current.getizq(), content)); 
+        } else if (comparison > 0) {
+            current.setdere(removeRecursive(current.getdere(), content)); 
+        } else {
+            if (current.getizq() == null && current.getdere() == null) {
+                return null; 
+            }
+
+      
+            if (current.getizq() == null) {
+                return current.getdere(); 
+            } else if (current.getdere() == null) {
+                return current.getizq(); 
+            }
+
+           
+
+            Comparable smallestValue = findSmallestValue(current.getdere());
+            current.setContent(smallestValue); 
+            current.setdere(removeRecursive(current.getdere(), smallestValue)); 
+        }
+
+        return current; 
+    }
+
+    private Comparable findSmallestValue(Modelo root) {
+        return root.getizq() == null ? root.getContent() : findSmallestValue(root.getizq());
     }
     
     public void recorrido(){
@@ -72,9 +107,10 @@ public class Controlador {
      
       private void post_orden(){
         
-    }   
+    } 
+      
+    
 }
-
 
 
 class TreePanel extends JPanel {
@@ -88,7 +124,7 @@ class TreePanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);  // Esto limpia el área antes de dibujar cualquier cosa
+        super.paintComponent(g);  
 
         if (root != null) {
             System.out.println("Dibujando el árbol con raíz: " + root.getContent());
@@ -150,4 +186,3 @@ class TreePanel extends JPanel {
     }
  }
 }
-
