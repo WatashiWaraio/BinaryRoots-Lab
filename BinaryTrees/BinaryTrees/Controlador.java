@@ -97,16 +97,73 @@ public class Controlador {
         
     }
     
-    private void in_orden(){
-        
+    public String in_orden(){
+         Modelo nodo=getRoot();
+       if(nodo==null){
+           return null;
+       }
+       Stack<Modelo> pila= new Stack<>();
+       String texto="";
+       while(!pila.isEmpty() || nodo!=null){
+           if(nodo!=null){
+               pila.push(nodo);
+               nodo=nodo.getizq();
+           }else{
+               nodo=pila.pop();
+               texto+=String.valueOf(nodo.getContent()+", ");
+               nodo=nodo.getdere();
+           }
+       }
+       return texto;
     }
     
-     private void pre_orden(){
-        
+    public String pre_orden(){
+       Modelo nodo=getRoot();
+       if(nodo==null){
+           return null;
+       }
+       Stack<Modelo> pila= new Stack<>();
+       pila.push(nodo);
+       String texto="";
+        while (!pila.isEmpty()) {
+            Modelo actual=pila.pop();
+            texto+=String.valueOf(actual.getContent());
+            if(actual!=null){
+                texto+=", ";
+            }
+            if(actual.getdere()!=null){
+               pila.push(actual.getdere());
+            }
+            if(actual.getizq()!=null){
+               pila.push(actual.getizq());
+            }
+        }
+        return texto;
     }
      
-      private void post_orden(){
-        
+    public String post_orden(){
+        Modelo nodo=this.getRoot();
+        if(nodo==null){
+          return null;
+        }
+        Stack<Modelo> pila= new Stack<>();
+        String texto="";
+        Modelo last=null;
+        while(!pila.isEmpty() || nodo != null){
+            if (nodo!=null){
+                pila.push(nodo);
+                nodo=nodo.getizq();
+            }else{
+                Modelo posible=pila.peek();
+                if(posible.getdere()!=null && last!=posible.getdere()){
+                    nodo=posible.getdere();
+                }else{
+                    texto+=String.valueOf(posible.getContent()+", ");
+                    last=pila.pop();
+                }
+            }
+        }
+        return texto; 
     } 
       
     
