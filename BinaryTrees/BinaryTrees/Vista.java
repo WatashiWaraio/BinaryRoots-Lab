@@ -13,14 +13,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Vista extends JFrame {
-    private Controlador controlador; 
-    private Modelo Modelo; 
-    private JTextField nodeInputField, levelCalculationField,deleteInputField;
-    private JRadioButton inOrderButton, preOrderButton, postOrderButton;
+    private Controlador controlador;
+    private Modelo modelo;
+    private JTextField nodeInputField, levelCalculationField, deleteInputField;
+    private JRadioButton inOrderButton;
+    private JRadioButton preOrderButton, postOrderButton;
     private JLabel heightLabel, levelLabel;
-    private JButton addNodeButton, traverseButton, bfsButton, calculateLevelButton, deleteNodeButton;
+    private JButton addNodeButton, traverseButton, bfsButton, calculateLevelButton, deleteNodeButton, changeTreeTypeButton;
     private TreePanel treePanel;
-    private boolean isNumberTree; 
+    private boolean isNumberTree;
 
     private static final Color BUTTON_COLOR = new Color(128, 212, 108);
     private static final Color TEXT_COLOR = Color.WHITE;
@@ -28,7 +29,6 @@ public class Vista extends JFrame {
     private static final Font ARIAL_BLACK = new Font("Arial Black", Font.PLAIN, 12);
 
     public Vista() {
-        type();
         setTitle("Binary Tree Manager");
         setSize(1280, 960);
         setResizable(false);
@@ -38,9 +38,10 @@ public class Vista extends JFrame {
         initComponents();
         addComponents();
         addListeners();
+        type();
     }
-    
-  private void type() {
+
+    private void type() {
         String[] options = {"Números", "Letras"};
         int choice = JOptionPane.showOptionDialog(
             this,
@@ -52,19 +53,20 @@ public class Vista extends JFrame {
             options,
             options[0]
         );
-        
+
         switch (choice) {
             case 0 -> isNumberTree = true;
             case 1 -> isNumberTree = false;
             default -> System.exit(0);
         }
     }
+
     private void initComponents() {
         treePanel = new TreePanel();
         controlador = new Controlador(treePanel);
         nodeInputField = createStyledTextField();
         levelCalculationField = createStyledTextField();
-       deleteInputField = createStyledTextField();
+        deleteInputField = createStyledTextField();
 
         inOrderButton = createStyledRadioButton("In-Order");
         preOrderButton = createStyledRadioButton("Pre-Order");
@@ -82,62 +84,64 @@ public class Vista extends JFrame {
         bfsButton = createStyledButton("Busqueda en amplitud");
         calculateLevelButton = createStyledButton("Calcular Nivel");
         deleteNodeButton = createStyledButton("Eliminar Nodo");
+        changeTreeTypeButton = createStyledButton("Cambiar Tipo de Árbol"); // Nuevo botón
 
         treePanel.setBackground(Color.WHITE);
     }
 
-private void addComponents() {
-    JPanel controlPanel = new JPanel();
-    controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
-    controlPanel.setBackground(Color.BLACK);
-    controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    
-    
-    if (controlPanel.getComponentCount() == 0) {
+    private void addComponents() {
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+        controlPanel.setBackground(Color.BLACK);
+        controlPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
         controlPanel.add(createStyledLabel("Ingrese valor del Nodo:"));
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(nodeInputField);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(addNodeButton);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         controlPanel.add(createStyledLabel("Recorrer:"));
         controlPanel.add(inOrderButton);
         controlPanel.add(preOrderButton);
         controlPanel.add(postOrderButton);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(traverseButton);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         controlPanel.add(bfsButton);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         controlPanel.add(heightLabel);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         controlPanel.add(createStyledLabel("Calcular Nivel:"));
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(levelCalculationField);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(calculateLevelButton);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(levelLabel);
 
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(createStyledLabel("Valor Nodo a eliminar:"));
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(deleteInputField);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(deleteNodeButton);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-    }
+        
+        
+        controlPanel.add(changeTreeTypeButton);
 
-    
-    if (this.getContentPane().getComponentCount() < 2) {
+        JScrollPane scrollPane = new JScrollPane(treePanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+
         add(controlPanel, BorderLayout.WEST);
-        add(treePanel, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.CENTER); 
     }
-}
 
 
     private void addListeners() {
@@ -172,9 +176,7 @@ private void addComponents() {
                 treePanel.repaint();
                 heightLabel.setText("Altura: "+controlador.altura());
             }
-            
         });
-       
        deleteNodeButton.addActionListener(e -> {
             String inputValue = deleteInputField.getText().trim(); 
             deleteInputField.setText("");
@@ -204,6 +206,39 @@ private void addComponents() {
                     treePanel.setTree(controlador.getRoot(),controlador.altura()); 
                     treePanel.repaint();  
             }
+        });
+       
+        traverseButton.addActionListener(e -> {
+            String resultadoRecorrido = "";
+            String nombreRecorrido = "";
+
+            if (inOrderButton.isSelected()) {
+                resultadoRecorrido = controlador.in_orden();
+                nombreRecorrido = "In-Order"; 
+            } else if (preOrderButton.isSelected()) {
+                resultadoRecorrido = controlador.pre_orden();
+                nombreRecorrido = "Pre-Order";
+            } else if (postOrderButton.isSelected()) {
+                resultadoRecorrido = controlador.post_orden();
+                nombreRecorrido = "Post-Order";
+            }
+
+            treePanel.actualizarRecorrido(resultadoRecorrido, nombreRecorrido); 
+            treePanel.repaint();  
+        });
+        
+         bfsButton.addActionListener(e -> {
+           String resultadoRecorrido = controlador.iniciarBEA(); 
+           String nombreRecorrido = "Búsqueda en Amplitud"; 
+
+            treePanel.actualizarRecorrido(resultadoRecorrido, nombreRecorrido); 
+            treePanel.repaint();  
+        });
+        
+         changeTreeTypeButton.addActionListener(e -> { 
+            dispose();
+            Vista nuevaVista = new Vista(); 
+            nuevaVista.setVisible(true); 
         });
     }
 
