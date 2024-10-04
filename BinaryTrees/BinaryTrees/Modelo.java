@@ -38,5 +38,10 @@ public class Modelo {
     public Modelo getdere() {
         return dere;
     }
+
+    public void setContent(Comparable content) {
+        this.content = content;
+    }
+    
 }
 
