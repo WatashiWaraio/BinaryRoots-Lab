@@ -1,4 +1,4 @@
-//*
+/*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -129,7 +129,7 @@ private void addComponents() {
         controlPanel.add(deleteInputField);
         controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         controlPanel.add(deleteNodeButton);
-        controlPanel.add(Box.createRigidArea(new Dimension(0, 20))); 
+        controlPanel.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     
@@ -156,8 +156,9 @@ private void addComponents() {
                 try {
                     int nodeValue = Integer.parseInt(inputValue);
                     controlador.addNode(nodeValue);
-                    treePanel.setTree(controlador.getRoot());
+                    treePanel.setTree(controlador.getRoot(),controlador.altura());
                     treePanel.repaint(); 
+                    heightLabel.setText("Altura: "+controlador.altura());
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
                 }
@@ -167,9 +168,11 @@ private void addComponents() {
                     return;
                 }
                 controlador.addNode(inputValue); 
-                treePanel.setTree(controlador.getRoot());
-               treePanel.repaint(); 
+                treePanel.setTree(controlador.getRoot(),controlador.altura());
+                treePanel.repaint();
+                heightLabel.setText("Altura: "+controlador.altura());
             }
+            
         });
        
        deleteNodeButton.addActionListener(e -> {
@@ -187,7 +190,7 @@ private void addComponents() {
                 try {
                     int nodeValue = Integer.parseInt(inputValue);
                     controlador.removeNode(nodeValue); 
-                    treePanel.setTree(controlador.getRoot()); 
+                    treePanel.setTree(controlador.getRoot(),controlador.altura()); 
                     treePanel.repaint(); 
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
@@ -198,7 +201,7 @@ private void addComponents() {
                     return;
                 }
                     controlador.removeNode(inputValue); 
-                    treePanel.setTree(controlador.getRoot()); 
+                    treePanel.setTree(controlador.getRoot(),controlador.altura()); 
                     treePanel.repaint();  
             }
         });
