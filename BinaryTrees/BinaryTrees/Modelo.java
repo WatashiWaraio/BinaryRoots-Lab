@@ -4,6 +4,8 @@
  */
 package BinaryTrees;
 
+import java.awt.List;
+
 /**
  *
  * @author qwerty2
@@ -42,6 +44,6 @@ public class Modelo {
     public void setContent(Comparable content) {
         this.content = content;
     }
-    
+   
 }
 
