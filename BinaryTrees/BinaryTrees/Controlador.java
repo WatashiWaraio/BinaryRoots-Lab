@@ -11,8 +11,12 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import static java.lang.Math.max;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -87,23 +91,47 @@ public class Controlador {
         return root.getizq() == null ? root.getContent() : findSmallestValue(root.getizq());
     }
     
-    public void recorrido(){
-        
+    
+    public String iniciarBEA() {
+    if (root == null) {
+        return "El árbol está vacío.";
     }
     
-    public void BEA(){
-        
-    }
-    
-    public int altura(){
-        return alturaRecursivo(getRoot());
-    }
-    public int alturaRecursivo(Modelo nodo){
-        if(nodo==null){
-            return 0;
+    String resultado = bea(root); 
+    return resultado; 
+}
+
+  
+    private String bea(Modelo node) {
+        if (node == null) {
+            return "El árbol está vacío.";
         }
-        return 1+max(alturaRecursivo(nodo.getdere()),alturaRecursivo(nodo.getizq()));
+
+        Queue<Modelo> queue = new LinkedList<>();
+        queue.add(node); 
+        StringBuilder textoResultado = new StringBuilder("BFS = "); 
+
+        while (!queue.isEmpty()) {
+            Modelo current = queue.poll(); 
+            textoResultado.append(current.getContent()).append(" -> "); 
+            
+     
+            if (current.getizq() != null) {
+                queue.add(current.getizq());
+            }
+            if (current.getdere() != null) {
+                queue.add(current.getdere());
+            }
+        }
+
+  
+        if (textoResultado.length() > 0) {
+            textoResultado.setLength(textoResultado.length() - 4);
+        }
+
+        return textoResultado.toString(); 
     }
+    
     
     public String in_orden(){
          Modelo nodo=getRoot();
@@ -118,7 +146,7 @@ public class Controlador {
                nodo=nodo.getizq();
            }else{
                nodo=pila.pop();
-               texto+=nodo.getContent()+", ";
+               texto+=nodo.getContent()+"  -> ";
                nodo=nodo.getdere();
            }
        }
@@ -135,7 +163,7 @@ public class Controlador {
        String texto="";
         while (!pila.isEmpty()) {
             Modelo actual=pila.pop();
-            texto+=actual.getContent()+", ";
+            texto+=actual.getContent()+"  -> ";
             if(actual.getdere()!=null){
                pila.push(actual.getdere());
             }
@@ -163,13 +191,24 @@ public class Controlador {
                 if(posible.getdere()!=null && last!=posible.getdere()){
                     nodo=posible.getdere();
                 }else{
-                    texto+=posible.getContent()+", ";
+                    texto+=posible.getContent()+" --> ";
                     last=pila.pop();
                 }
             }
         }
         return texto; 
-    }   
+    }  
+    
+      public int altura(){
+        return alturaRecursivo(getRoot());
+    }
+    public int alturaRecursivo(Modelo nodo){
+        if(nodo==null){
+            return 0;
+        }
+        return 1+max(alturaRecursivo(nodo.getdere()),alturaRecursivo(nodo.getizq()));
+    }
+    
 }
 
 
@@ -178,23 +217,55 @@ class TreePanel extends JPanel {
 
     private Modelo root;
     private int altura;
+    private String recorridoActual = ""; 
+    private String tipoRecorrido = "";
+
+
+ 
 
     public void setTree(Modelo root, int altura) {
         this.root = root;
         this.altura = altura;
     }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);  // Esto limpia el área antes de dibujar cualquier cosa
-
-        if (root != null) {
-            System.out.println("Dibujando el árbol con raíz: " + root.getContent());
-            drawTree(g, root, getWidth() / 2, 50, 100,altura-1);
-        } else {
-            System.out.println("El árbol está vacío.");
-        }
+    
+    public void actualizarRecorrido(String recorrido, String tipoRecorrido) {
+        this.recorridoActual = recorrido; 
+        this.tipoRecorrido = tipoRecorrido; 
     }
+    
+@Override
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);  
+
+    if (root != null) {
+        drawTree(g, root, getWidth() / 2, 50, 100, altura - 1);
+    }
+
+    if (!recorridoActual.isEmpty()) {
+        g.setColor(Color.BLACK);
+
+        FontMetrics fm = g.getFontMetrics();
+        int titleWidth = fm.stringWidth(tipoRecorrido);
+        int recorridoWidth = fm.stringWidth(recorridoActual);
+        
+        int rectWidth = Math.max(titleWidth, recorridoWidth) + 20;
+        int rectHeight = 100;
+        int rectXPosition = (getWidth() - rectWidth) / 2;
+        int rectYPosition = getHeight() - 150;
+
+        g.fillRect(rectXPosition, rectYPosition, rectWidth, rectHeight);
+
+        g.setColor(Color.WHITE);
+        
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+        g.drawString(tipoRecorrido, rectXPosition + 10, rectYPosition + fm.getAscent() + 10);
+
+        g.setFont(new Font("Arial", Font.PLAIN, 14));
+        g.drawString(recorridoActual, rectXPosition + 10, rectYPosition + fm.getAscent() + 50);
+    }
+}
+
+
 
  private void drawTree(Graphics g, Modelo node, int x, int y, int xOffset,int exp) {
     if (node == null) {
@@ -248,4 +319,3 @@ class TreePanel extends JPanel {
     }
  }
 }
-
