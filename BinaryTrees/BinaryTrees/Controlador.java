@@ -10,6 +10,8 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import static java.lang.Math.max;
+import java.util.Stack;
 import javax.swing.JPanel;
 
 /**
@@ -47,7 +49,7 @@ public class Controlador {
     }
 
     public void removeNode(Comparable content) {
-    root = removeRecursive(root, content);
+        root = removeRecursive(root, content);
 }
 
     private Modelo removeRecursive(Modelo current, Comparable content) {
@@ -93,8 +95,14 @@ public class Controlador {
         
     }
     
-    public void calcularNivel(){
-        
+    public int altura(){
+        return alturaRecursivo(getRoot());
+    }
+    public int alturaRecursivo(Modelo nodo){
+        if(nodo==null){
+            return 0;
+        }
+        return 1+max(alturaRecursivo(nodo.getdere()),alturaRecursivo(nodo.getizq()));
     }
     
     public String in_orden(){
@@ -110,7 +118,7 @@ public class Controlador {
                nodo=nodo.getizq();
            }else{
                nodo=pila.pop();
-               texto+=String.valueOf(nodo.getContent()+", ");
+               texto+=nodo.getContent()+", ";
                nodo=nodo.getdere();
            }
        }
@@ -127,10 +135,7 @@ public class Controlador {
        String texto="";
         while (!pila.isEmpty()) {
             Modelo actual=pila.pop();
-            texto+=String.valueOf(actual.getContent());
-            if(actual!=null){
-                texto+=", ";
-            }
+            texto+=actual.getContent()+", ";
             if(actual.getdere()!=null){
                pila.push(actual.getdere());
             }
@@ -158,44 +163,44 @@ public class Controlador {
                 if(posible.getdere()!=null && last!=posible.getdere()){
                     nodo=posible.getdere();
                 }else{
-                    texto+=String.valueOf(posible.getContent()+", ");
+                    texto+=posible.getContent()+", ";
                     last=pila.pop();
                 }
             }
         }
         return texto; 
-    } 
-      
-    
+    }   
 }
+
 
 
 class TreePanel extends JPanel {
 
     private Modelo root;
+    private int altura;
 
-    public void setTree(Modelo root) {
+    public void setTree(Modelo root, int altura) {
         this.root = root;
-       
+        this.altura = altura;
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);  
+        super.paintComponent(g);  // Esto limpia el área antes de dibujar cualquier cosa
 
         if (root != null) {
             System.out.println("Dibujando el árbol con raíz: " + root.getContent());
-            drawTree(g, root, getWidth() / 2, 50, 100);
+            drawTree(g, root, getWidth() / 2, 50, 100,altura-1);
         } else {
             System.out.println("El árbol está vacío.");
         }
     }
 
- private void drawTree(Graphics g, Modelo node, int x, int y, int xOffset) {
+ private void drawTree(Graphics g, Modelo node, int x, int y, int xOffset,int exp) {
     if (node == null) {
         return;
     }
-
+    
     Graphics2D g2 = (Graphics2D) g;
     int radius = 30; 
 
@@ -226,20 +231,21 @@ class TreePanel extends JPanel {
 
     g2.drawString(content, x - textWidth / 2, y + textHeight / 2);
 
- 
+     
     g2.setStroke(new BasicStroke(2)); 
     int newOffset = Math.max(xOffset - 20, 40);
 
     if (node.getizq() != null) {
         g2.setColor(Color.BLACK);
-        g2.drawLine(x, y + radius, x - xOffset, y + 100 - radius);
-        drawTree(g, node.getizq(), x - xOffset, y + 100, newOffset);
+        g2.drawLine(x, y + radius, x - xOffset*exp/2, y + 100 - radius);
+        drawTree(g, node.getizq(), x - xOffset*exp/2, y + 100, newOffset,exp-1);
     }
 
     if (node.getdere() != null) {
         g2.setColor(Color.BLACK); 
-        g2.drawLine(x, y + radius, x + xOffset, y + 100 - radius);
-        drawTree(g, node.getdere(), x + xOffset, y + 100, newOffset);
+        g2.drawLine(x, y + radius, x + xOffset*exp/2, y + 100 - radius);
+        drawTree(g, node.getdere(), x + xOffset*exp/2, y + 100, newOffset,exp-1);
     }
  }
 }
+
