@@ -43,3 +43,22 @@ This application is designed using the MVC (Model-View-Controller) architecture,
 We hope this application enhances your understanding of binary trees. 🌱🌞
 
 Bye we hope you'll understand this app. 😊
+
+## Start 🌳
+![image](https://github.com/user-attachments/assets/922fe80c-21ff-4d8e-bbf4-7c5f5c29daf9)
+
+## UI 🌳
+![image](https://github.com/user-attachments/assets/aca9e3ec-81cf-4419-98c7-619dafc5d137)
+
+## IN-ORDEN 📏
+
+![image](https://github.com/user-attachments/assets/4e3b01eb-1b1c-457b-b1c6-0592f39ee073)
+
+## PRE-ORDEN 🍂
+
+![image](https://github.com/user-attachments/assets/c5b4e624-d6eb-4da0-b1f3-f398895b50bd)
+
+## POST-ORDEN 🌟
+
+![image](https://github.com/user-attachments/assets/29b6d508-d0c9-4f4e-bb23-f89be631e7f1)
+
