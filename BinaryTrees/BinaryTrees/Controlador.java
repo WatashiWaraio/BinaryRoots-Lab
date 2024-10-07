@@ -4,19 +4,10 @@
  */
 package BinaryTrees;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import static java.lang.Math.max;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -199,7 +190,7 @@ public class Controlador {
         return texto; 
     }  
     
-      public int altura(){
+    public int altura(){
         return alturaRecursivo(getRoot());
     }
     public int alturaRecursivo(Modelo nodo){
@@ -208,11 +199,22 @@ public class Controlador {
         }
         return 1+max(alturaRecursivo(nodo.getdere()),alturaRecursivo(nodo.getizq()));
     }
-    
-}
+    public String nivel(Comparable n){
+        if(nivelR(getRoot(),n,0)==0){
+            return "n/a";
+        }else{
+            return String.valueOf(nivelR(getRoot(),n,0));
+        }
+    }
 
-
-
-
- }
+    private int nivelR(Modelo nodo, Comparable n,int nivel) {
+        if(nodo==null){
+            return 0;
+        }
+        int comparison = n.compareTo(nodo.getContent());
+        if(comparison==0){
+            return nivel+1;
+        }
+        return Math.max(nivelR(nodo.getizq(),n,nivel+1),nivelR(nodo.getdere(),n,nivel+1));
+    }
 }
