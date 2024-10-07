@@ -240,6 +240,31 @@ public class Vista extends JFrame {
             Vista nuevaVista = new Vista(); 
             nuevaVista.setVisible(true); 
         });
+        calculateLevelButton.addActionListener(e ->{
+            String inputValue = levelCalculationField.getText().trim();
+            if (inputValue.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un valor.");
+                return;
+            }
+            if (isNumberTree) {
+                if (!inputValue.matches("-?\\d+")) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese únicamente números.");
+                    return;
+                }
+                try {
+                    int nodeValue = Integer.parseInt(inputValue);
+                    levelLabel.setText("Nivel: "+controlador.nivel(nodeValue)); 
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.");
+                }
+            } else {
+                if (!inputValue.matches("[a-zA-Z]+")) {
+                    JOptionPane.showMessageDialog(this, "Por favor, ingrese únicamente letras.");
+                    return;
+                }
+                    levelLabel.setText("Nivel: "+controlador.nivel(inputValue)); 
+            }
+        });
     }
 
 
@@ -399,5 +424,5 @@ protected void paintComponent(Graphics g) {
         g2.drawLine(x, y + radius, x + xOffset*exp/2, y + 100 - radius);
         drawTree(g, node.getdere(), x + xOffset*exp/2, y + 100, newOffset,exp-1);
     }
-
-
+    }
+ }
